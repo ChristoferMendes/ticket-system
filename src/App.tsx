@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import GlobalStyle from './styles/global'
 import firebase from './services/firebaseConnect'
 import { BrowserRouter } from 'react-router-dom'
 import AllRoutes from './routes'
-import AuthProvider from './contexts/auth'
+import AuthProvider, { AuthContext } from './contexts/auth'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Header from './components/Header'
 
 function App() {
+  const { user, auth } = useContext(AuthContext)
 
   return (
     <>
