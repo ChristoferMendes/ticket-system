@@ -3,10 +3,10 @@ import { toast } from "react-toastify";
 import firebase from "../services/firebaseConnect";
 
 interface User {
-    uid: string | null | undefined;
-    name: string | null | undefined;
-    email: string | null | undefined;
-    avatarUrl: string | null | undefined;
+    uid?: string | undefined;
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    avatarUrl?: string | null | undefined;
 }
 
 interface AuthCtx {
@@ -17,6 +17,8 @@ interface AuthCtx {
   signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>
+  setUser: (data: User | null) => void;
+  storageUser: (data: User) => void;
 }
 
 export const AuthContext = createContext({} as AuthCtx)
@@ -122,7 +124,9 @@ function AuthProvider({ children }: PropsWithChildren) {
       loading,
       signUp,
       signOut,
-      signIn
+      signIn,
+      setUser,
+      storageUser,
     }}
     >{children}
     </AuthContext.Provider>
