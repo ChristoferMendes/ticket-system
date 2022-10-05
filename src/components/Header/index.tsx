@@ -22,7 +22,7 @@ export default function Header() {
         <FiHome color="#fff"/>
         Tickets
       </Link>
-      <Link to={'/customer'}>
+      <Link to={'/customers'}>
         <FiUser color="#fff"/>
         Customers
       </Link>
