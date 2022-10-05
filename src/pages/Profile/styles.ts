@@ -64,10 +64,6 @@ export const Form = styled.form`
     }
   }
 
-  input, button{
-    width: 300px;
-  }
-
   .name-input {
     margin-bottom: 2em;
   }
@@ -90,7 +86,7 @@ export const Form = styled.form`
   }
 
   input, textarea, select {
-    margin-bottom: 1em;
+    margin: 1em 0;
     padding: .7em;
     border: 0;
     border-radius: 5px;

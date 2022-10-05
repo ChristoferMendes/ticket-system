@@ -25,7 +25,7 @@ function Dashboard() {
           <Container className='dashboard'>
             <DashboardContainer>
               <span>There's none tickets</span>
-              <TicketLink to={'/new'} className='new-ticket'>
+              <TicketLink to={'/new_ticket'} className='new-ticket'>
                 <FiPlus size={25} />
                 New ticket
               </TicketLink>
@@ -33,7 +33,7 @@ function Dashboard() {
           </Container>
         ) : (
           <>
-            <TicketLink to={'/new'}>
+            <TicketLink to={'/new_ticket'}>
               <FiPlus size={25} />
               New ticket
             </TicketLink>

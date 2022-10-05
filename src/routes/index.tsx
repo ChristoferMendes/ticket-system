@@ -5,6 +5,7 @@ import Signup from "../pages/Auth/SignUp";
 import RouteWrapper from "./Router";
 import Profile from "../pages/Profile";
 import Customers from "../pages/Customers";
+import NewTicket from "../pages/NewTicket";
 
 export default function AllRoutes() {
   return (
@@ -20,6 +21,8 @@ export default function AllRoutes() {
       <Route path="/profile" element={<RouteWrapper loggedComponent={<Profile />} defaultComponent={<SignIn />} isPrivate />}/>
 
       <Route path="/customers" element={<RouteWrapper loggedComponent={<Customers />} defaultComponent={<SignIn />} isPrivate/>} />
+  
+      <Route path="/new_ticket" element={<RouteWrapper loggedComponent={<NewTicket />} defaultComponent={<SignIn />} isPrivate/>} />
   </Routes>
   )
 }
