@@ -7,7 +7,7 @@ import Title from "../../components/Title";
 import { AuthContext } from '../../contexts/auth';
 import { Container, Content, Form, LogoutContainer, UserContainer } from "./styles";
 import avatar from '../../assets/avatar.png'
-import { AuthContainer } from '../Auth/styles';
+import { toast } from 'react-toastify';
 
 export default function Profile() {
   const { user, signOut, setUser, storageUser } = useContext(AuthContext)
@@ -15,7 +15,7 @@ export default function Profile() {
   const [name, setName] = useState(user?.name)
   const [email, setEmail] = useState(user?.email)
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl)
-  const [imageAvatar, setImageAvatar] = useState(null);
+  const [imageAvatar, setImageAvatar] = useState<File | null>(null);
 
   const handleFile = (e: FormEvent) => {
     const input = e.target as HTMLInputElement;
@@ -23,12 +23,35 @@ export default function Profile() {
       return;
     }
 
-    const file = input.files[0];
-    console.log(file);
+    const image = input.files[0];
+    
+    if (image.type === 'image/jpeg' || image.type === 'image/png') {
+      setImageAvatar(image);
+      setAvatarUrl(URL.createObjectURL(image))
+    } else {
+      toast.warn('Image needs to be in jpeg or png format')
+      setImageAvatar(null);
+      return null;
+    }
   }
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
+    const currentUid = user?.uid;
 
+    if (!imageAvatar) {
+      return;
+    }
+
+    const uploadTask = await firebase.storage()
+    .ref(`images/${currentUid}/${imageAvatar?.name}`)
+    .put(imageAvatar)
+    .then(() => {
+      console.log('Photo send')
+    })
+    .catch((e) => {
+      console.log(e.message);
+      toast.error('Error while sending the image')
+    })
   }
 
   const handleSave = async (e: FormEvent) => {
@@ -70,8 +93,8 @@ export default function Profile() {
 
               <input type="file" accept='image/*' className={'file-input'} onChange={handleFile}/> <br /> <br />
               {<img src={avatarUrl == null ? avatar : avatarUrl} width={'250'} height={'250'} />}
+              <p>{imageAvatar ? 'Preview...' : ''}</p> 
             </label>
-
             {name && email && (
               <>
                 <label>Name</label>

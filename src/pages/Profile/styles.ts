@@ -1,5 +1,14 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
+const animatePreview = keyframes`
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.3)
+  }
+`
 export const Container = styled.div`
   
 `;
@@ -45,6 +54,13 @@ export const Form = styled.form`
         opacity: 1;
         transform: scale(1.4)
       }
+    }
+
+    p {
+      position: absolute;
+      color: #fff;
+      margin-top: 10%;
+      animation: ${animatePreview} 2s infinite;
     }
   }
 
