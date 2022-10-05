@@ -58,7 +58,7 @@ function AuthProvider({ children }: PropsWithChildren) {
           uid,
           name: userProfile.data()?.name,
           email: value.user?.email,
-          avatarUrl: userProfile.data()?.avatar_url,
+          avatarUrl: userProfile.data()?.avatarUrl,
         }
 
 

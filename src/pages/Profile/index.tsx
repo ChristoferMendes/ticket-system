@@ -24,7 +24,7 @@ export default function Profile() {
     }
 
     const image = input.files[0];
-    
+
     if (image.type === 'image/jpeg' || image.type === 'image/png') {
       setImageAvatar(image);
       setAvatarUrl(URL.createObjectURL(image))
@@ -43,15 +43,36 @@ export default function Profile() {
     }
 
     const uploadTask = await firebase.storage()
-    .ref(`images/${currentUid}/${imageAvatar?.name}`)
-    .put(imageAvatar)
-    .then(() => {
-      console.log('Photo send')
-    })
-    .catch((e) => {
-      console.log(e.message);
-      toast.error('Error while sending the image')
-    })
+      .ref(`images/${currentUid}/${imageAvatar?.name}`)
+      .put(imageAvatar)
+      .then(async () => {
+        const getStorageImg: Promise<File> = await firebase.storage().ref(`images/${currentUid}`)
+        .child(imageAvatar.name).getDownloadURL();
+        return getStorageImg;
+      })
+      .then(async (url: string) => {
+        const urlPhoto = url;
+        await firebase.firestore().collection('users')
+        .doc(user?.uid)
+        .update({
+          avatarUrl: urlPhoto,
+          name,
+        })
+        .then(() => {
+          const data = {
+            ...user,
+            avatarUrl: urlPhoto,
+            name,
+          };
+          
+          setUser(data);
+          storageUser(data);
+        })
+      })
+      .catch((e) => {
+        console.log(e.message);
+        toast.error('Error while sending the image')
+      })
   }
 
   const handleSave = async (e: FormEvent) => {
@@ -63,13 +84,13 @@ export default function Profile() {
         .update({
           name,
         }).then(() => {
-            const data = {
-              ...user,
-              name
-            };
-            setUser(data);
-            storageUser(data);
-          }
+          const data = {
+            ...user,
+            name
+          };
+          setUser(data);
+          storageUser(data);
+        }
         )
     } else if (name !== '' && imageAvatar !== null) {
       handleUpload();
@@ -91,9 +112,9 @@ export default function Profile() {
                 <FiUpload color='#fff' size={25} />
               </span>
 
-              <input type="file" accept='image/*' className={'file-input'} onChange={handleFile}/> <br /> <br />
+              <input type="file" accept='image/*' className={'file-input'} onChange={handleFile} /> <br /> <br />
               {<img src={avatarUrl == null ? avatar : avatarUrl} width={'250'} height={'250'} />}
-              <p>{imageAvatar ? 'Preview...' : ''}</p> 
+              <p>{imageAvatar ? 'Preview...' : ''}</p>
             </label>
             {name && email && (
               <>
