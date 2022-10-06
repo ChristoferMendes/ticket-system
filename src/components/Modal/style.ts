@@ -23,7 +23,7 @@ export const ModalContent = styled.div`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
 
   button {
-    background-color: #f65835;
+    background-color: #181c2e;
     border: 0;
     color: #fff;
     position: absolute;
@@ -43,6 +43,7 @@ export const ModalContent = styled.div`
   h2 {
     margin-bottom: 1.2em;
     font-size: 2em;
+    color: #181c2e;
   }
 
   span {
@@ -50,7 +51,7 @@ export const ModalContent = styled.div`
     font-size: 1.1em;
     color: #121212;
 
-    a {
+    i {
       font-weight: 400;
       margin-right: 1em;
       padding: 2px 8px;
@@ -67,8 +68,12 @@ export const Row = styled.div`
   margin-bottom: 1em;
 `
 
-export const StatusModal = styled.a<StatusProps>`
-  background-color: red;
+export const StatusModal = styled.i<StatusProps>`
+  background-color: ${props => props.status == 'Finished' 
+  ? '#BEBEBE' 
+  : props.status == 'Progress' ? 
+  '#c4af1b' : 
+  '#1fd655' };
   padding: 0px 20px;
   color: #fff;
 `

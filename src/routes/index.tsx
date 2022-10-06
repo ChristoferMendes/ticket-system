@@ -10,19 +10,21 @@ import NewTicket from "../pages/NewTicket";
 export default function AllRoutes() {
   return (
     <Routes>
-      <Route path='/' element={<RouteWrapper loggedComponent={<Dashboard />} defaultComponent={<SignIn />}/>} />
+      <Route path='/' element={<RouteWrapper loggedComponent={<Dashboard />} />} />
 
-      <Route path='/signin' element={<RouteWrapper loggedComponent={<Dashboard />} defaultComponent={<SignIn />} />} />
+      <Route path='/signin' element={<RouteWrapper loggedComponent={<Dashboard />} />} />
 
       <Route path='/signup' element={<RouteWrapper loggedComponent={<Dashboard />} defaultComponent={<Signup />} />} />
         
-      <Route path='/dashboard' element={<RouteWrapper loggedComponent={<Dashboard />} defaultComponent={<SignIn />} isPrivate />}/>
+      <Route path='/dashboard' element={<RouteWrapper loggedComponent={<Dashboard />} isPrivate />}/>
       
-      <Route path="/profile" element={<RouteWrapper loggedComponent={<Profile />} defaultComponent={<SignIn />} isPrivate />}/>
+      <Route path="/profile" element={<RouteWrapper loggedComponent={<Profile />} isPrivate />}/>
 
-      <Route path="/customers" element={<RouteWrapper loggedComponent={<Customers />} defaultComponent={<SignIn />} isPrivate/>} />
+      <Route path="/customers" element={<RouteWrapper loggedComponent={<Customers />} isPrivate/>} />
   
-      <Route path="/new_ticket" element={<RouteWrapper loggedComponent={<NewTicket />} defaultComponent={<SignIn />} isPrivate/>} />
+      <Route path="/new_ticket" element={<RouteWrapper loggedComponent={<NewTicket />} isPrivate/>} />
+
+      <Route path="/new_ticket/:id" element={<RouteWrapper loggedComponent={<NewTicket /> } isPrivate/> } />
   </Routes>
   )
 }

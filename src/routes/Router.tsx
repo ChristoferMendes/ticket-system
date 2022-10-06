@@ -1,14 +1,15 @@
 import { ReactComponentElement, ReactElement, useContext } from 'react';
 import { Navigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/auth';
+import SignIn from '../pages/Auth/SignIn';
 
 interface RouteWrapperComponents {
   loggedComponent: ReactElement;
-  defaultComponent: ReactElement;
+  defaultComponent?: ReactElement;
   isPrivate?: boolean;
 }
 
-export default function RouteWrapper({loggedComponent, defaultComponent, isPrivate}: RouteWrapperComponents) {
+export default function RouteWrapper({loggedComponent, defaultComponent = <SignIn />, isPrivate}: RouteWrapperComponents) {
   // const [auth, loadingPage] = [false, false];
   const { auth, loading } = useContext(AuthContext)
 

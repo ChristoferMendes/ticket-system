@@ -22,15 +22,15 @@ export default function Modal({ content, togglePostModal }: ModalProps) {
           <h2>Details of the ticket</h2>
           <Row>
             <span>
-              Customer: <a>{content.customer}</a>
+              Customer: <i>{content.customer}</i>
             </span>
           </Row>
           <Row>
             <span>
-              Subject: <a>{content.subject}</a>
+              Subject: <i>{content.subject}</i>
             </span>
             <span>
-              Registered in: <a>{content.formatedDate}</a>
+              Registered in: <i>{content.formatedDate}</i>
             </span>
           </Row>
           <Row>
