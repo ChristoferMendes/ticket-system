@@ -12,8 +12,9 @@ import firebase from '../../services/firebaseConnect'
 import { DashboardContainer, SearchMoreButton, Status, Table, TicketLink } from './styles'
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
+import Modal from '../../components/Modal';
 
-interface Ticket {
+export interface Ticket {
   id: string;
   customer: string;
   customerId: number;
@@ -40,25 +41,30 @@ function Dashboard() {
   const [isEmpty, setIsEmpty] = useState(false);
   const [lastDocs, setLastDocs] = useState<Ticket>();
 
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [detail, setDetail] = useState<Ticket>()
+
   useEffect(() => {
+    const loadTickets = async () => {
+      try {
+        const getTickets = await listRef.limit(5).get();
+        console.log('TICKETS: ', getTickets);
+        updateState(getTickets)
+  
+  
+      } catch (e) {
+        console.log(e);
+        toast.error('Something went wrong :(')
+  
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadTickets();
   }, [])
 
-  const loadTickets = async () => {
-    try {
-      const getTickets = await listRef.limit(5).get();
-      console.log('TICKETS: ', getTickets);
-      updateState(getTickets)
-
-
-    } catch (e) {
-      console.log(e);
-      toast.error('Something went wrong :(')
-
-    } finally {
-      setLoading(false);
-    }
-  }
+  
 
   const updateState = async (tickets: any) => {
     const isCollectionEmpty = tickets.size === 0;
@@ -94,16 +100,21 @@ function Dashboard() {
     setLoadingMore(true);
     try {
       const getMore = await listRef.startAfter(lastDocs).limit(5)
-      .get()
+        .get()
 
       updateState(getMore);
 
-    } catch(e) {
+    } catch (e) {
       toast.error('Error while fetching more...')
     } finally {
       setLoadingMore(false);
     }
 
+  }
+
+  const togglePostModal = (item: Ticket) => {
+    setShowPostModal(!showPostModal);
+    setDetail(item)
   }
 
   if (loading) {
@@ -158,17 +169,20 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {tickets.map((row, index) => (
+                {tickets.map((item, index) => (
                   <React.Fragment key={index}>
                     <tr>
-                      <td data-label='Customer'>{row.customer}</td>
-                      <td data-label='Subject'>{row.subject}</td>
+                      <td data-label='Customer'>{item.customer}</td>
+                      <td data-label='Subject'>{item.subject}</td>
                       <td data-label='Status'>
-                        <Status status={`${row.status}`}>{row.status}</Status>
+                        <Status status={`${item.status}`}>{item.status}</Status>
                       </td>
-                      <td data-label='Created At'>{row.formatedDate}</td>
+                      <td data-label='Created At'>{item.formatedDate}</td>
                       <td data-label='#'>
-                        <button style={{ backgroundColor: '#3583f6' }}>
+                        <button
+                          style={{ backgroundColor: '#3583f6' }}
+                          onClick={() => togglePostModal(item)}
+                        >
                           <FiSearch size={17} />
                         </button>
                         <button style={{ backgroundColor: '#f6a935' }} >
@@ -180,14 +194,18 @@ function Dashboard() {
                 ))}
               </tbody>
             </Table>
-            {loadingMore && <h3 style={{textAlign: 'center', marginTop: 15}}>Searching more tickets...</h3>}
+            {loadingMore && <h3 style={{ textAlign: 'center', marginTop: 15 }}>Searching more tickets...</h3>}
             {!loadingMore && !isEmpty ? (
               <SearchMoreButton onClick={() => handleMore()}>Search more</SearchMoreButton>
             ) : (
-              <h3 style={{textAlign: 'center', margin: 20}}>There's no more tickets</h3>
+              <h3 style={{ textAlign: 'center', margin: 20 }}>There's no more tickets</h3>
             )
             }
           </>
+        )}
+
+        {showPostModal && detail && (
+          <Modal content={detail} togglePostModal={togglePostModal} />
         )}
       </Content>
     </>

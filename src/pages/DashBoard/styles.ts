@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-interface Status {
+export interface StatusProps {
   status: 'Open' | 'Progress' | 'Finished'
 }
 
@@ -147,12 +147,12 @@ export const TicketLink = styled(Link)`
 
 `
 
-export const Status = styled.span<Status>`
+export const Status = styled.span<StatusProps>`
   background-color: ${props => props.status == 'Finished' 
   ? '#BEBEBE' 
   : props.status == 'Progress' ? 
   '#c4af1b' : 
-  '#1fd655' }
+  '#1fd655' };
 `
 
 export const SearchMoreButton = styled.button`
