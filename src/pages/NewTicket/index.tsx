@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useCallback, useContext, useEffect, useState } from 'react';
 import { FiPlus } from 'react-icons/fi'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import firebase from '../../services/firebaseConnect';
 import Header from "../../components/Header";
@@ -16,6 +17,9 @@ interface User {
 }
 
 export default function NewTicket() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [subject, setSubject] = useState('Support');
   const [status, setStatus] = useState('Open')
   const [complement, setComplement] = useState('')
@@ -23,6 +27,8 @@ export default function NewTicket() {
   const [customers, setCustomers] = useState<User[] | []>([])
   const [loading, setLoading] = useState(true);
   const [customerSelected, setCustomerSelected] = useState(0);
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const { user } = useContext(AuthContext)
 
@@ -47,6 +53,10 @@ export default function NewTicket() {
 
         setCustomers(list);
 
+        if(id) {
+          loadId(list)
+        }
+
 
       } catch (error) {
         console.log(error);
@@ -55,11 +65,51 @@ export default function NewTicket() {
         setLoading(false);
       }
     })()
-  }, [])
+  }, [id])
 
+  const loadId = async (ticket: User[]) => {
+    try {
+      const getTicket = await firebase.firestore().collection('tickets').doc(id).get()
+
+      setSubject(getTicket.data()?.subject)
+      setStatus(getTicket.data()?.status)
+      setComplement(getTicket.data()?.complement)
+
+      const index = ticket.findIndex(item => item.id === getTicket.data()?.customerId);
+      setCustomerSelected(index);
+      setIsEditing(true);
+    } catch (e) {
+      console.log(e);
+      toast.error('Invalid id :(')
+      setIsEditing(false);
+    }
+  
+  }
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault()
+
+    if (isEditing) {
+      await firebase.firestore().collection('tickets').doc(id)
+      .update({
+        customer: customers[customerSelected].fantasyName,
+        customerId: customers[customerSelected].id,
+        subject,
+        status,
+        complement,
+        userUid: user?.uid,
+      }).then(() => {
+        toast.success('Ticket editing with success')
+        setCustomerSelected(0);
+        setComplement('')
+        navigate('/dashboard')
+      }).catch(() => {
+        toast.error('Error while updating... try it later')
+      })
+
+      return;
+    }
+
     try {
       await firebase.firestore().collection('tickets')
       .add({

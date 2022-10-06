@@ -34,7 +34,6 @@ const listRef = firebase.firestore().collection('tickets')
   .orderBy('status', 'desc');
 
 function Dashboard() {
-  const { signOut } = useContext(AuthContext);
   const [tickets, setTickets] = useState<Ticket[] | []>([])
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -48,7 +47,6 @@ function Dashboard() {
     const loadTickets = async () => {
       try {
         const getTickets = await listRef.limit(5).get();
-        console.log('TICKETS: ', getTickets);
         updateState(getTickets)
   
   
@@ -185,9 +183,9 @@ function Dashboard() {
                         >
                           <FiSearch size={17} />
                         </button>
-                        <button style={{ backgroundColor: '#f6a935' }} >
+                        <Link style={{ backgroundColor: '#f6a935' }} to={`/new_ticket/${item.id}`}>
                           <FiEdit2 size={17} />
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   </React.Fragment>

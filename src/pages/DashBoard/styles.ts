@@ -55,7 +55,7 @@ export const Table = styled.table`
     text-transform: uppercase;
   }
 
-  td button {
+  td button, a {
     border: 0;
     padding: 5px;
     margin-right: 2px;
