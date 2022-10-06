@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+interface Status {
+  status: 'Open' | 'Progress' | 'Finished'
+}
+
 export const Container = styled.div`
   
 `;
@@ -141,4 +145,22 @@ export const TicketLink = styled(Link)`
       transform: scale(1.1)
     }
 
+`
+
+export const Status = styled.span<Status>`
+  background-color: ${props => props.status == 'Finished' 
+  ? '#BEBEBE' 
+  : props.status == 'Progress' ? 
+  '#c4af1b' : 
+  '#1fd655' }
+`
+
+export const SearchMoreButton = styled.button`
+    margin: 1.5em 0;
+    padding: .5em 1em;
+    height: 35px;
+    border: 0;
+    border-radius: 7px;
+    background-color: #181c2e;
+    color: #fff;
 `
